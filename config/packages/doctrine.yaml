@@ -1,0 +1,39 @@
+doctrine:
+    dbal:
+        driver: 'pdo_mysql'
+        server_version: '8.0'
+        charset: utf8mb4
+        mapping_types:
+            enum: string
+            json: json
+        url: '%env(resolve:DATABASE_URL)%'
+        types:
+            json: Doctrine\DBAL\Types\JsonType
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        metadata_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        query_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        result_cache_driver:
+            type: pool
+            pool: doctrine.result_cache_pool
+        second_level_cache:
+            enabled: true
+            region_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+        mappings:
+            App:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+
+parameters:
+    env(DATABASE_URL): ''

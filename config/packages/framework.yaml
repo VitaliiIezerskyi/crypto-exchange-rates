@@ -1,0 +1,8 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    csrf_protection: false
+    serializer: ~
+    http_method_override: true
+    ide: 'idea://open?file=%%f&line=%%l'
+    php_errors:
+        log: true

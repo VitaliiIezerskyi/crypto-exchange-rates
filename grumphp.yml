@@ -1,0 +1,30 @@
+grumphp:
+    process_timeout: 120
+    testsuites:
+        git_pre_commit:
+            tasks: [ phpstanCurrent, phpcsCurrent, fixCurrentDry ]
+        git_pre_push:
+            tasks: [ test ]
+    tasks:
+        phpstanCurrent:
+            task: phpstan-current
+            metadata:
+                task: make
+        phpcsCurrent:
+            task: phpcs-current
+            metadata:
+                task: make
+        fixCurrentDry:
+            task: fix-current-dry
+            metadata:
+                task: make
+
+        test:
+            task: test
+            metadata:
+                task: make
+                priority: 0
+
+    parallel:
+        enabled: true
+        max_workers: 8

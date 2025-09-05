@@ -25,3 +25,8 @@ phpstan.neon
 /.idea
 /.idea/stape-content-api.iml
 /.idea/dataSources.xml
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###
