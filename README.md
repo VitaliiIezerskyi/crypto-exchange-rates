@@ -20,7 +20,7 @@ Web application providing API endpoints for cryptocurrency exchange rates (EUR t
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone git@github.com:VitaliiIezerskyi/crypto-exchange-rates.git
 cd crypto-exchange-rates
 ```
 
