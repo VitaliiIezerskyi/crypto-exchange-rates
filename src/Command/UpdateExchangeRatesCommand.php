@@ -35,7 +35,7 @@ class UpdateExchangeRatesCommand extends Command
 
             return Command::SUCCESS;
         } catch (\Throwable $exception) {
-            $this->logger->error('Failed to update exchange rates: '.$exception->getMessage(), ['exception' => $exception->getMessage()]);
+            $this->logger->error('Failed to update exchange rates: '.$exception->getMessage(), ['exception' => $exception]);
             $io->error('Failed to update exchange rates: '.$exception->getMessage());
 
             return Command::FAILURE;
