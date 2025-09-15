@@ -74,27 +74,6 @@ readonly class ResponseService
             ],
         ];
 
-        if (!$this->environmentService->isProd()) {
-            $trace = \array_map(static function ($step) {
-                unset($step['args']);
-
-                return $step;
-            }, $exception->getTrace());
-
-            $data = [
-                'success' => false,
-                'error' => [
-                    'code' => $code,
-                    'message' => $exception->getMessage(),
-                    'description' => $exception->getMessage(),
-                    'exception' => $exception::class,
-                    'file' => $exception->getFile(),
-                    'line' => $exception->getLine(),
-                    'trace' => $trace,
-                ],
-            ];
-        }
-
         return new JsonResponse($data, $code);
     }
 

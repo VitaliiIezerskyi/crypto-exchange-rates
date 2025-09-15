@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -20,7 +21,7 @@ class BinanceApiClient
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -34,16 +35,15 @@ class BinanceApiClient
         foreach (self::SUPPORTED_PAIRS as $pair) {
             try {
                 $rate = $this->fetchRate($pair);
-
-                if ($rate !== null) {
-                    $formattedPair = $this->formatCurrencyPair($pair);
-                    $rates[$formattedPair] = $rate;
-                }
+                $formattedPair = $this->formatCurrencyPair($pair);
+                $rates[$formattedPair] = $rate;
             } catch (\Throwable $exception) {
                 $this->logger->error('Failed to fetch rate for pair: '.$pair, [
                     'exception' => $exception,
                     'pair' => $pair,
                 ]);
+
+                throw $exception;
             }
         }
 
@@ -63,7 +63,7 @@ class BinanceApiClient
                     'symbol' => $symbol,
                 ]);
 
-                return null;
+                throw new \Exception('Binance API returned non-200 status', $response->getStatusCode());
             }
 
             $data = $response->toArray();
@@ -74,7 +74,7 @@ class BinanceApiClient
                     'symbol' => $symbol,
                 ]);
 
-                return null;
+                throw new \Exception('Invalid response from Binance API', Response::HTTP_BAD_REQUEST);
             }
 
             return $data['price'];
@@ -84,7 +84,7 @@ class BinanceApiClient
                 'symbol' => $symbol,
             ]);
 
-            return null;
+            throw $e;
         }
     }
 

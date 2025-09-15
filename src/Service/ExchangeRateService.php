@@ -5,6 +5,7 @@ namespace App\Service;
 use App\DTO\ExchangeRateRequestDTO;
 use App\Entity\ExchangeRate;
 use App\Repository\ExchangeRateRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class ExchangeRateService
@@ -14,13 +15,13 @@ class ExchangeRateService
     public function __construct(
         private readonly BinanceApiClient $binanceApiClient,
         private readonly ExchangeRateRepository $exchangeRateRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     public function updateRates(): void
     {
-        $this->logger->info('Starting exchange rate update');
         $rates = $this->binanceApiClient->fetchExchangeRates();
 
         if (empty($rates)) {
@@ -30,25 +31,14 @@ class ExchangeRateService
         }
 
         foreach ($rates as $currencyPair => $rate) {
-            try {
-                $exchangeRate = new ExchangeRate();
-                $exchangeRate->setCurrencyPair($currencyPair);
-                $exchangeRate->setRate($rate);
+            $exchangeRate = new ExchangeRate();
+            $exchangeRate->setCurrencyPair($currencyPair);
+            $exchangeRate->setRate($rate);
 
-                $this->exchangeRateRepository->save($exchangeRate);
-
-                $this->logger->debug('Saved exchange rate', [
-                    'pair' => $currencyPair,
-                    'rate' => $rate,
-                ]);
-            } catch (\Throwable $exception) {
-                $this->logger->error('Failed to save exchange rate', [
-                    'pair' => $currencyPair,
-                    'rate' => $rate,
-                    'exception' => $exception,
-                ]);
-            }
+            $this->entityManager->persist($exchangeRate);
         }
+
+        $this->entityManager->flush();
     }
 
     public function getRatesForLast24Hours(ExchangeRateRequestDTO $exchangeRateRequestDTO): array

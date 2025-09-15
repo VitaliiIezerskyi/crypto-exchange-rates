@@ -10,15 +10,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(
-    name: 'app:update-exchange-rates',
-    description: 'Update exchange rates from Binance API'
-)]
+#[AsCommand(name: 'app:update-exchange-rates', description: 'Update exchange rates from Binance API')]
 class UpdateExchangeRatesCommand extends Command
 {
     public function __construct(
         private readonly ExchangeRateService $exchangeRateService,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct();
     }

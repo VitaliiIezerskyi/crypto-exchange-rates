@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'exchange_rates')]
 class ExchangeRate
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\GeneratedValue]
+    #[ORM\Id]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING)]
@@ -60,12 +60,5 @@ class ExchangeRate
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 }

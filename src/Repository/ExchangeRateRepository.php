@@ -13,15 +13,6 @@ class ExchangeRateRepository extends ServiceEntityRepository
         parent::__construct($registry, ExchangeRate::class);
     }
 
-    public function save(ExchangeRate $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
     public function findRatesForLast24Hours(string $currencyPair, \DateTimeImmutable $since): array
     {
         return $this->createQueryBuilder('er')
